@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- <div id="container"></div> -->
+    <h1>Task Manager</h1>
+    <!--form-->
+    <form id="task-form">
+        <input type="text" id="task-input" placeholder="Add a new task" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <div id="filter-buttons">
+        <button id="all-btn" class="Active">All</button>
+        <button id="completed-btn">Completed</button>
+        <button id="pending-btn">Active</button>
+        <button id="clear-completed">Clear Completed</button>  
+    </div>
+    
+    <!-- Move task-list outside and below filter-buttons -->
+    <div id="task-list"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>   
+</body>
+</html>

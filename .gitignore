@@ -1,0 +1,11 @@
+# Environment folders
+env/
+.env/
+venv/
+**/env/
+**/.env/
+**/venv/
+
+# Node modules
+node_modules/
+**/node_modules/
