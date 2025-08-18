@@ -5,8 +5,10 @@ const authrouter = require('./routes/auth.routes');
 const mongoose = require('mongoose');
 const connectdb = require('./db/connectdb');
 require('dotenv').config();
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use('/auth', authrouter);
 app.use(express.static(path.join(__dirname, 'public')));

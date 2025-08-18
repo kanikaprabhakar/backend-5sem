@@ -1,11 +1,18 @@
-# Environment folders
-env/
-.env/
-venv/
-**/env/
-**/.env/
-**/venv/
+# Environment files
+.env
+.env.local
+.env.production
+**/.env
+**/.env.*
 
 # Node modules
 node_modules/
 **/node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db

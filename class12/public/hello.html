@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  </head>
+  <body>
+    <h1>Hello, User!</h1>
+    <button id="check">check</button>
+    <script>
+      const button = document.getElementById("check");
+      button.addEventListener("click", async () => {
+        try {
+            let token = localStorage.getItem("token");
+            let res = await axios.get("http://localhost:3000/auth/user", {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
+            alert(res.data.message);
+        } catch (error) {
+            alert(error.message);
+        }
+      });
+    </script>
+  </body>
+</html>

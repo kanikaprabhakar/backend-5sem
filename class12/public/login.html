@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <form
+      id="login-form"
+      style="
+        margin: 20px auto;
+        width: 50vw;
+        border: 2px solid lightgray;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      "
+    >
+      <input type="email" name="email" placeholder="Email" />
+      <input type="password" name="password" placeholder="password" />
+      <button>Sign Up</button>
+    </form>
+
+    <script>   
+      const login = document.getElementById("login-form");
+      login.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const formChildren = login.children;
+          const email = formChildren[0].value;
+          const password = formChildren[1].value;
+          let res = await axios.post("http://localhost:3000/auth/login", {
+            email: email,
+            password: password,
+          });
+          localStorage.setItem("token", res.data.token);
+          alert("logged in successfully");
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    </script>
+  </body>
+</html>
