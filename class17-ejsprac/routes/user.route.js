@@ -31,6 +31,17 @@ router.get("/create/product", async (req,res) => {
 })
 
 
+
+router.get("/product/:id", verifyUser, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+        res.render("singleProduct", { product });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 router.get("/package/buy/", verifyUser, async (req, res) => {
     try {
         const userId = req.user.userId;
