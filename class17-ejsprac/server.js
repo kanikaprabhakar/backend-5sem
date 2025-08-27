@@ -7,6 +7,8 @@ const connectdb = require('./db/connectdb');
 require('dotenv').config();
 const userrouter = require('./routes/user.route');
 const cookieParser = require('cookie-parser');
+const { verifyUser } = require('./middleware/admin.middleware');
+const Product = require('./models/product.model');
 // const cors = require('cors');
 
 
@@ -41,7 +43,8 @@ const products = [
     }
 ]
 
-app.get('/', (req, res) => {
+app.get('/', verifyUser, async(req, res) => {
+    const products = await Product.find();
     res.render('home', { name: "kanika", products: products });
 });
 

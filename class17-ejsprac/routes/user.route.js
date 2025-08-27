@@ -13,12 +13,14 @@ router.get("/create/product", async (req,res) => {
             {
                 name: "name1",
                 price: 120000,
-                description: "description1"
+                description: "description1",
+                image: "https://fastly.picsum.photos/id/428/300/200.jpg?hmac=ikKOcamKDMicSZKD7eMbhzgMNNbyCucuLohsjaMt740"
             },
             {
                 name: "name2",
                 price: 450200,
-                description: "description2"
+                description: "description2",
+                image: "https://picsum.photos/seed/p2/300/200"
             }
         ]
         const products =  await Product.insertMany(dummyProducts);
@@ -26,7 +28,6 @@ router.get("/create/product", async (req,res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-    
 })
 
 

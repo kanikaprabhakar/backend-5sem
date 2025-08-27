@@ -8,12 +8,13 @@
 <body>
     <h1>Welcome to the Home Page</h1>
     <%=name%>
-    <% products.forEach(function(product) { %>
+    <% products.forEach(product => { %>
         <div>
-            <h2><%= product.name %></h2>
+            <img src="https://fastly.picsum.photos/id/428/300/200.jpg?hmac=ikKOcamKDMicSZKD7eMbhzgMNNbyCucuLohsjaMt740">
+            <h3><%= product.name %></h3>
             <p><%= product.description %></p>
-            <p>Price: $<%= product.price %></p>
+            <p>₹<%= product.price %></p>
         </div>
-    <% }); %>
+    <% }) %>
 </body>
 </html>
