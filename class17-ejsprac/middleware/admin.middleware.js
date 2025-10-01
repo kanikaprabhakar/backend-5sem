@@ -34,7 +34,8 @@ const verifyUser = (req, res, next) => {
         next();
     } catch (error) {
         // console.log(error);
-        res.redirect("/auth/login");
+        // res.redirect("/auth/login");
+        res.status(401).json({ error: "Invalid token" });
     }
 };
 

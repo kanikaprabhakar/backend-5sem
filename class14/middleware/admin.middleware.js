@@ -18,21 +18,20 @@ async function verifyAdmin(req,res,next){
 
 const jwt = require("jsonwebtoken");
 
-const verifyUser = (req, res, next) => {
-    try {
-        const token = req.headers.authorization; // Get token from "Bearer TOKEN"
-        
-        if (!token) {
-            return res.status(401).json({ error: "No token provided" });
-        }
-        
-        const decoded = jwt.verify(token, process.env.jwtsecret);
-        req.user = decoded; 
-        next();
-    } catch (error) {
-        return res.status(401).json({ error: "Invalid token" });
-    }
-};
-
+function verifyUser(req,res,next){
+  try {
+    const authorization = req.headers.authorization;
+    const token = authorization?.split(" ")[1] || req.cookies.token;
+    
+    const payload = jwt.verify(token,process.env.JWT_SECRET);
+    // payload = payload which we passed when creating token
+    req.user = payload;
+    next()
+  } catch (error) {
+    console.log(error);
+    // res.redirect("/auth/login");
+    return res.status(400).json({message:error.message});
+  }
+}
 
 module.exports = { verifyAdmin, verifyUser };

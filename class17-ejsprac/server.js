@@ -9,11 +9,18 @@ const userrouter = require('./routes/user.route');
 const cookieParser = require('cookie-parser');
 const { verifyUser } = require('./middleware/admin.middleware');
 const Product = require('./models/product.model');
-// const cors = require('cors');
+const cors = require('cors');
+
+var corsOptions = {
+  "origin": "http://localhost:3000",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204,
+  "credentials": true
+};
 
 
-
-
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 // app.use(cors());
@@ -24,6 +31,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/auth', authrouter);
 app.use('/user', userrouter);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 const products = [
     {
@@ -49,5 +57,5 @@ app.get('/', verifyUser, async(req, res) => {
 });
 
 connectdb().then(() => {
-  app.listen(3000, () => console.log("http://localhost:3000"));
+  app.listen(4000, () => console.log("http://localhost:4000"));
 }).catch(err => console.log(err));
