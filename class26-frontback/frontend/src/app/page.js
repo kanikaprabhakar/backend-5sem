@@ -10,78 +10,81 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const [refresh,setRefresh] = useState(0);
 
   // Initialize socket connection
-  useEffect(() => {
-    const newSocket = io('http://localhost:5000');
+  useEffect(()=>{
+    const newSocket = io("http://localhost:5000");
     setSocket(newSocket);
-
-    return () => newSocket.close();
-  }, []);
+  },[])
 
   // Listen for notifications
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on('notification', (notification) => {
-      setNotifications(prev => [notification, ...prev]);
-      
-      // Auto-remove notification after 5 seconds
-      setTimeout(() => {
-        setNotifications(prev => prev.filter(n => n !== notification));
-      }, 5000);
-    });
-
-    return () => socket.off('notification');
-  }, [socket]);
+  useEffect(()=>{
+    
+    socket?.on("notification",(data)=>{
+      setNotifications((prev)=>{
+        return [...prev,data]
+      })
+      setRefresh(prev=>prev+1);
+      setTimeout(()=>{
+        setNotifications([]);
+      },5000)
+    })
+  },[socket])
 
   // Fetch posts
-  const fetchPosts = async () => {
-    const res = await fetch('http://localhost:5000/api/posts');
+  const getAllPost = async()=>{
+    const res = await fetch("http://localhost:5000/api/posts");
     const data = await res.json();
-    setPosts(data);
-  };
+    setPosts(data)
+  }
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  useEffect(()=>{
+    getAllPost();
+  },[refresh])
 
   // Handle login
-  const handleLogin = (e) => {
+  const handleLogin = async (e)=>{
     e.preventDefault();
-      socket.emit('register', username);
-      setIsLoggedIn(true);
-  };
+    socket.emit("register",username);
+    setIsLoggedIn(true);
+    setRefresh(prev=>prev+1);
+  }
 
   // Create post
-  const handleCreatePost = async (e) => {
+  const handleCreatePost = async (e)=>{
     e.preventDefault();
-    if (!newPost.trim()) return;
-
-    await fetch('http://localhost:5000/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: newPost, author: username })
-    });
-
-    setNewPost('');
-    fetchPosts();
-  };
+    const payload = {
+      content:newPost,
+      author:username
+    }
+    const res = await fetch("http://localhost:5000/api/posts",{
+      method:"POST",
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify(payload)
+    })
+    const data = await res.json();
+    setRefresh(prev=>prev+1);
+  }
 
   // Like post
-  const handleLike = async (postId) => {
-    await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username })
+  const handleLike = async (id)=>{
+    const res = await fetch(`http://localhost:5000/api/posts/${id}/like`,{
+      method:"POST",
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({username})
     });
-
-    fetchPosts();
-  };
+    const data = await res.json();
+    setRefresh(prev=>prev+1);
+  }
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center text-black">
         <div className="bg-white p-8 rounded-lg shadow-md w-96">
           <h1 className="text-2xl font-bold mb-4">Enter Your Name</h1>
           <form onSubmit={handleLogin}>
@@ -102,7 +105,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 text-black">
       {/* Notifications */}
       <div className="fixed top-4 right-4 z-50 space-y-2">
         {notifications.map((notif, idx) => (
@@ -137,28 +140,28 @@ export default function Home() {
 
         {/* Posts List */}
         <div className="space-y-4">
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <div key={post.id} className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold text-lg">{post.author}</h3>
+                  <h3 className="font-semibold text-lg">{post?.author}</h3>
                   <p className="text-gray-500 text-sm">
-                    {new Date(post.createdAt).toLocaleString()}
+                    {new Date(post?.createdAt)?.toLocaleString()}
                   </p>
                 </div>
               </div>
-              <p className="text-gray-800 mb-4">{post.content}</p>
+              <p className="text-gray-800 mb-4">{post?.content}</p>
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => handleLike(post.id)}
-                  disabled={post.likes.includes(username)}
+                  onClick={() => handleLike(post?.id)}
+                  disabled={post?.likes?.includes(username)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                    post.likes.includes(username)
+                    post?.likes?.includes(username)
                       ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                       : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
                   }`}
                 >
-                  ❤️ {post.likes.length} {post.likes.length === 1 ? 'Like' : 'Likes'}
+                  ❤️ {post?.likes?.length} {post?.likes?.length === 1 ? 'Like' : 'Likes'}
                 </button>
               </div>
             </div>
